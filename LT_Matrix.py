@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[6]:
+# In[2]:
 
 get_ipython().magic(u'matplotlib inline')
 import matplotlib
@@ -14,7 +14,7 @@ from scipy import stats
 from scipy import signal
 
 
-# In[5]:
+# In[3]:
 
 n_lights = 512
 n_pixels = 512
@@ -24,7 +24,7 @@ spp = 135
 
 # Set objects. Light is at (0, 1)-(1, 1). Sensor is at (0, 0)-(1, 0).
 
-# In[ ]:
+# In[4]:
 
 light_sigma = 0.25
 d_max = 0.7
@@ -48,7 +48,7 @@ for obj in objs :
 
 # Compute visibility matrix.
 
-# In[ ]:
+# In[5]:
 
 def intersect(a, b, c, d) :
     a = np.array(a)
@@ -90,7 +90,7 @@ plt.imshow(ltm, cmap = 'gray');
 
 # # Row Column Sampling Test
 
-# In[ ]:
+# In[6]:
 
 def row_col_sampling(ltm, nr, nc) :
     def dist(a, b) :
@@ -189,7 +189,7 @@ print 'filtered l2 =', np.sqrt(sum((pixels_filtered-ref)**2 * wnd))
 # * tree node index ~ [1, 1023]
 # * only consider geometric error terms
 
-# In[ ]:
+# In[7]:
 
 import Queue
 
@@ -292,7 +292,7 @@ print 'original l2 =', np.sqrt(sum((pixels-ref)**2 * wnd))
 print 'filtered l2 =', np.sqrt(sum((pixels_filtered-ref)**2 * wnd))
 
 
-# In[ ]:
+# In[8]:
 
 step = 16
 indices = np.arange(0, n_pixels, step)
@@ -322,7 +322,7 @@ print 'cubic l2 =', np.sqrt(sum((pixels_interp_cubic-ref)**2 * wnd))
 
 # # AA Filtering Test
 
-# In[ ]:
+# In[9]:
 
 imp = 0 # 0--uniform 1--importance
 strate_num = 34
