@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[2]:
+# In[13]:
 
 get_ipython().magic(u'matplotlib inline')
 import matplotlib
@@ -13,8 +13,11 @@ from scipy import fftpack
 from scipy import stats
 from scipy import signal
 
+from numba import jit
+import time
 
-# In[3]:
+
+# In[5]:
 
 n_lights = 512
 n_pixels = 512
@@ -24,7 +27,7 @@ spp = 135
 
 # Set objects. Light is at (0, 1)-(1, 1). Sensor is at (0, 0)-(1, 0).
 
-# In[4]:
+# In[6]:
 
 light_sigma = 0.25
 d_max = 0.7
@@ -48,7 +51,7 @@ for obj in objs :
 
 # Compute visibility matrix.
 
-# In[5]:
+# In[7]:
 
 def intersect(a, b, c, d) :
     a = np.array(a)
@@ -90,7 +93,7 @@ plt.imshow(ltm, cmap = 'gray');
 
 # # Row Column Sampling Test
 
-# In[6]:
+# In[8]:
 
 def row_col_sampling(ltm, nr, nc) :
     def dist(a, b) :
@@ -189,7 +192,7 @@ print 'filtered l2 =', np.sqrt(sum((pixels_filtered-ref)**2 * wnd))
 # * tree node index ~ [1, 1023]
 # * only consider geometric error terms
 
-# In[7]:
+# In[29]:
 
 import Queue
 
@@ -270,10 +273,19 @@ def refine_light_cut(pixel_index):
             break
     return total_radiance
 
-pixels = np.zeros(n_pixels)
-for i in range(n_pixels):
-    pixels[i] += refine_light_cut(i)
+def calc_pixels():
+    pixels = np.zeros(n_pixels)
+    for i in range(n_pixels):
+        pixels[i] += refine_light_cut(i)
+    return pixels
+
+start = time.time()
+pixels = calc_pixels()
+end = time.time()
+print 'running time = ', end - start, 's'
+
 pixels_filtered = ndimage.filters.gaussian_filter(pixels, pixel_sigma*n_pixels)
+
 plt.figure(figsize = (15, 10))
 plt.plot(pixels, label = 'rec');
 plt.plot(pixels_filtered, label = 'filtered');
@@ -292,7 +304,7 @@ print 'original l2 =', np.sqrt(sum((pixels-ref)**2 * wnd))
 print 'filtered l2 =', np.sqrt(sum((pixels_filtered-ref)**2 * wnd))
 
 
-# In[8]:
+# In[17]:
 
 step = 16
 indices = np.arange(0, n_pixels, step)
@@ -322,7 +334,7 @@ print 'cubic l2 =', np.sqrt(sum((pixels_interp_cubic-ref)**2 * wnd))
 
 # # AA Filtering Test
 
-# In[9]:
+# In[11]:
 
 imp = 0 # 0--uniform 1--importance
 strate_num = 34
